@@ -13,9 +13,10 @@ import VideoItem from "./components/VideoItem";
 import { apiRest } from "./services/Api"; // Certifique-se de que o caminho está correto
 
 interface IVideo {
-  id: string; // `id` é agora obrigatório
+  id: string;
   title: string;
   description: string;
+  url?: string; // URL opcional do vídeo
 }
 
 export default function App() {
@@ -24,22 +25,11 @@ export default function App() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [url, setUrl] = useState("");
-  console.log(title, description, url);
 
-  const handleTextChange = (text: string) => {
-    console.log("Texto digitado:", text);
-    setTitle(title); // Atualiza o estado com o novo texto
-  };
   // Função para buscar dados
   const fetchVideos = async () => {
     setLoading(true);
-
     try {
-      const data = {
-        title: title,
-        description: description,
-        url: url, // URL do vídeo
-      };
       const response = await apiRest.get("/videos", {
         params: {
           title: title,
@@ -48,15 +38,15 @@ export default function App() {
         },
       });
       console.log("Data fetched:", response.data);
-      setVideos(response.data); // Atualiza o estado com os vídeos recebidos
+      setVideos(response.data);
     } catch (error: any) {
       console.error("Error fetching data:", error);
-      // Opcional: Definir um estado de erro aqui
     } finally {
       setLoading(false);
     }
   };
 
+  // Função para registrar dados
   async function registrerDados() {
     setLoading(true);
     try {
@@ -65,12 +55,11 @@ export default function App() {
         description: description,
         url: url,
       };
-      const response = await apiRest.post("/videos", data); // Passar os dados como o segundo argumento
+      const response = await apiRest.post("/videos", data);
       console.log("Data posted:", response.data);
-      setVideos(response.data); // Atualiza o estado com os vídeos recebidos
+      setVideos(response.data);
     } catch (error: any) {
       console.error("Error posting data:", error);
-      // Opcional: Definir um estado de erro aqui
     } finally {
       setLoading(false);
     }
@@ -84,17 +73,6 @@ export default function App() {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
-  const handleBlur = () => {
-    Alert.alert("Campo perdido o foco");
-  };
-
-  const handleFocus = () => {
-    Alert.alert("Campo recebeu o foco");
-  };
-
-  const handleSubmitEditing = () => {
-    Alert.alert("Texto enviado", title);
-  };
   return (
     <ScrollView style={styles.container}>
       {videos?.length === 0 ? (
@@ -103,11 +81,12 @@ export default function App() {
         </View>
       ) : (
         videos?.map((video) => (
-          <View key={video?.id} style={styles.videoItemContainer}>
+          <View key={video.id} style={styles.videoItemContainer}>
             <VideoItem
-              title={video?.title}
-              description={video?.description}
-              id={video?.id}
+              title={video.title}
+              description={video.description}
+              url={video.url} // Passando a URL do vídeo
+              id={video.id}
             />
           </View>
         ))
@@ -121,19 +100,19 @@ export default function App() {
           placeholder="Digite algo..."
           value={title}
           onChangeText={setTitle}
-          onBlur={handleBlur}
-          onFocus={handleFocus}
-          onSubmitEditing={handleSubmitEditing}
+          onBlur={() => Alert.alert("Campo perdido o foco")}
+          onFocus={() => Alert.alert("Campo recebeu o foco")}
+          onSubmitEditing={() => Alert.alert("Texto enviado", title)}
         />
         <TextInput
           style={styles.input}
-          placeholder="Digite algo..."
+          placeholder="Digite a descrição..."
           value={description}
           onChangeText={setDescription}
         />
         <TextInput
           style={styles.input}
-          placeholder="Digite algo..."
+          placeholder="Digite a URL..."
           value={url}
           onChangeText={setUrl}
         />
@@ -156,16 +135,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   videoItemContainer: {
-    marginBottom: 10, // Espaço entre os itens
+    marginBottom: 10,
   },
   buttonContainer: {
-    margin: 10, // Margem ao redor do botão
-  },
-  containerInput: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
+    margin: 10,
   },
   input: {
     height: 40,

@@ -1,54 +1,73 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Button, Alert } from "react-native";
-import { Audio } from "expo-av";
+import React from "react";
+import { View, Text, StyleSheet, Button, Platform } from "react-native";
+import { WebView } from "react-native-webview";
 
 interface IVideoItemProps {
   id: string;
   title: string;
   description: string;
-  url?: string;
+  url?: string; // URL do YouTube
+  onVideoPress?: (url: string) => void; // Callback opcional
 }
 
-const VideoItem = ({ title, description, url }: IVideoItemProps) => {
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-
-  const playSound = async () => {
-    if (!url) {
-      Alert.alert("No URL", "No audio URL provided");
-      return;
-    }
-
-    const { sound } = await Audio.Sound.createAsync(
-      { uri: url },
-      { shouldPlay: true }
-    );
-    setSound(sound);
-    setIsPlaying(true);
-
-    sound.setOnPlaybackStatusUpdate((status: { didJustFinish: any }) => {
-      if (status.didJustFinish) {
-        setIsPlaying(false);
-      }
-    });
+const VideoItem = ({
+  title,
+  description,
+  url,
+  onVideoPress,
+}: IVideoItemProps) => {
+  // Função para formatar a URL de incorporação
+  const formatEmbedUrl = (url: string) => {
+    const urlParts = url.split("/");
+    const videoId = urlParts[urlParts.length - 1].split("?")[0];
+    return `https://www.youtube.com/embed/${videoId}`;
   };
 
-  const stopSound = async () => {
-    if (sound) {
-      await sound.stopAsync();
-      setIsPlaying(false);
-    }
-  };
+  // Formata a URL se estiver disponível
+  const embedUrl = url ? formatEmbedUrl(url) : "";
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
+      {Platform.OS === "web" ? (
+        embedUrl ? (
+          // <iframe
+          //   src={embedUrl}
+          //   height="315"
+          //   width="560"
+          //   frameBorder="0"
+          //   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          //   allowFullScreen
 
-      <Button
-        title={isPlaying ? "Stop" : "Play"}
-        onPress={isPlaying ? stopSound : playSound}
-      />
+          // />
+          <iframe
+            width="914"
+            height="514"
+            src={embedUrl}
+            title="COMO ESCREVER NO PDF"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            style={styles.iframe}
+          ></iframe>
+        ) : null
+      ) : (
+        embedUrl && (
+          <WebView
+            source={{ uri: embedUrl }} // Usa a URL formatada para o WebView
+            style={styles.webview}
+          />
+        )
+      )}
+      {url && (
+        <Button
+          title="Show Video URL"
+          onPress={() => {
+            if (onVideoPress) {
+              onVideoPress(url);
+            }
+          }}
+        />
+      )}
     </View>
   );
 };
@@ -58,16 +77,26 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderRadius: 5,
-    backgroundColor: "#fff",
+    backgroundColor: "#3b3536",
     elevation: 2,
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#fff",
   },
   description: {
     fontSize: 14,
     marginVertical: 10,
+    color: "#fff",
+  },
+  webview: {
+    width: "100%",
+    height: 200, // Ajuste conforme necessário
+  },
+  iframe: {
+    width: "100%",
+    height: 200, // Ajuste conforme necessário
   },
 });
 
