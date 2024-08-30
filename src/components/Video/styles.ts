@@ -1,29 +1,45 @@
-import { StyleSheet } from "react-native";
+import styled from "styled-components/native";
 
-export const styles = StyleSheet.create({
-  container: {
-    margin: 10,
-    padding: 24,
-    borderRadius: 5,
-    backgroundColor: "#dd0a2d",
-    elevation: 2,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  description: {
-    fontSize: 14,
-    marginVertical: 10,
-    color: "#fff",
-  },
-  webview: {
-    width: "100%",
-    height: 200, // Ajuste conforme necessário
-  },
-  iframe: {
-    width: "100%",
-    height: 200, // Ajuste conforme necessário
-  },
-});
+// Container
+export const Container = styled.View`
+  margin: 10px;
+  padding: 24px;
+  border-radius: 5px;
+  z-index: 2;
+  margin: 10px;
+  padding: 16px;
+  border-radius: 10px;
+  background-color: ${(props) => props.theme.colors.secondary};
+
+  elevation: 3;
+`;
+
+// Title
+export const Title = styled.Text`
+  font-size: 18px;
+  font-weight: bold;
+  color: ${(props) => props.theme.colors.font};
+  margin-bottom: 8px;
+`;
+
+// Description
+export const Description = styled.Text`
+  font-size: 14px;
+  color: ${(props) => props.theme.colors.font};
+  margin-bottom: 12px;
+`;
+
+// WebView (ou iframe)
+export const WebView = styled.View`
+  width: 100%;
+  height: 200px; /* Ajuste conforme necessário */
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 10px;
+`;
+
+// Iframe (para uso em WebView)
+export const WebViewContainer = styled.View`
+  width: 100%;
+  height: 200px;
+`;

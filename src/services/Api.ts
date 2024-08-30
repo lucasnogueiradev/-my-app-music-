@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export const apiRest = axios.create({
-  // baseURL: "http://api-registration-videos.onrender.com",
-  baseURL: "http://localhost:3333",
+  baseURL: "http://api-registration-videos.onrender.com",
+  // baseURL: "http://localhost:3333",
   headers: {
     "Content-Type": "application/json",
   },

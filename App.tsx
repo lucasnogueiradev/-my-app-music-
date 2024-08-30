@@ -1,18 +1,24 @@
+// App.tsx
 import React from "react";
-// import { Home } from "./src/Home/index";
 import { StatusBar, View, StyleSheet } from "react-native";
-import { Home } from "./src/Home";
+import { ThemeProvider } from "styled-components/native";
+import dark from "./src/styles/theme/Dark";
+import { Header } from "./src/components/Header/Header";
+import { List } from "./src/List";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="transparent"
-        translucent={true}
-      />
-      <Home />
-    </View>
+    <ThemeProvider theme={dark}>
+      <View style={styles.container}>
+        <Header />
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent={true}
+        />
+        <List />
+      </View>
+    </ThemeProvider>
   );
 }
 

@@ -1,7 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet, Button, Platform } from "react-native";
-import { WebView } from "react-native-webview";
-import { styles } from "./styles";
+// import WebView from "react-native-webview";
+import YoutubePlayer from "react-native-youtube-iframe";
+import * as S from "./styles";
 
 type IVideoItemProps = {
   id?: string;
@@ -28,44 +29,34 @@ export const VideoItem = ({
   const embedUrl = url ? formatEmbedUrl(url) : "";
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+    <S.Container>
+      <S.Title>{title}</S.Title>
+
       {Platform.OS === "web" ? (
         embedUrl ? (
-          <iframe
-            width="914"
-            height="514"
-            src={embedUrl}
-            title="COMO ESCREVER NO PDF"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            style={styles.iframe}
-          ></iframe>
+          <S.WebViewContainer>
+            <iframe
+              src={embedUrl}
+              title="COMO ESCREVER NO PDF"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            ></iframe>
+          </S.WebViewContainer>
         ) : null
       ) : (
         embedUrl && (
           // <WebView source={{ uri: embedUrl }} style={styles.webview} />
-          <iframe
-            width="914"
-            height="514"
-            src={embedUrl}
-            title="COMO ESCREVER NO PDF"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            style={styles.iframe}
-          ></iframe>
+          <S.WebViewContainer>
+            {/* <iframe
+              src={embedUrl}
+              title="COMO ESCREVER NO PDF"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            ></iframe> */}
+            <YoutubePlayer videoId="0GOUF8vNqzE" height={180} />
+          </S.WebViewContainer>
           // <Text>teste</Text>
         )
       )}
-      {url && (
-        <Button
-          title="Show Video URL"
-          onPress={() => {
-            if (onVideoPress) {
-              onVideoPress(url);
-            }
-          }}
-        />
-      )}
-    </View>
+      <S.Description>{description}</S.Description>
+    </S.Container>
   );
 };
