@@ -1,12 +1,8 @@
 import axios from "axios";
 
-export const api = "https://api-registration-videos.onrender.com";
-const API_URL = `${api}/videos`;
-
-console.log("API_URL:", API_URL);
-
 export const apiRest = axios.create({
-  baseURL: "http://api-registration-videos.onrender.com",
+  // baseURL: "http://api-registration-videos.onrender.com",
+  baseURL: "http://localhost:3333",
   headers: {
     "Content-Type": "application/json",
   },
